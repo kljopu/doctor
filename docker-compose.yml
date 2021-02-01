@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  postgres:
+    restart: unless-stopped
+    build: ./postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/postgres_data:/var/lib/postgresql/data
+      - ./postgres/sqls/:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 1q2w3e4r
+      POSTGRES_DB: mydb
+
+  diagnosis-server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./diagnosis-server
+    container_name: diagnosis-server
+    volumes:
+      - /usr/src/diagnosis/node_modules
+      - ./diagnosis-server:/usr/src/diagnosis
+      - ./domains:/usr/src/domains
+    depends_on:
+      - postgres
+
+  community-server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./community-server
+    container_name: community-server
+    volumes:
+      - /usr/src/community/node_modules
+      - ./community-server:/usr/src/community
+      - ./domains:/usr/src/domains
+    depends_on:
+      - postgres
+
+  nginx:
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
