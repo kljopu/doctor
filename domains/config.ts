@@ -1,4 +1,4 @@
-import { User, Doctor } from "./domains";
+import * as path from "path"
 
 export const ormConfig = {
   type: "postgres",
@@ -7,6 +7,6 @@ export const ormConfig = {
   username: "myuser",
   password: "1q2w3e4r",
   database: "mydb",
-  entities: [User, Doctor],
+  entities: [`${path.join(__dirname, "./domains")}/*.entity.[tj]s`],
   synchronize: true,
 };

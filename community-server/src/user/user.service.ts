@@ -12,7 +12,7 @@ export class UserService {
 
     async findByEmail(email: string): Promise<User | undefined> {
         try {
-            const user: User = await this.users.findOne({ email })
+            const user: User = await this.users.findOne({ email: email })
             if (!user) throw new NotFoundException()
             return user
         } catch (error) {

@@ -24,23 +24,6 @@ export class AuthService {
         return user
     }
 
-    async createUser(registerInput): Promise<any> {
-        try {
-            console.log(registerInput);
-            let { email, name, password, role } = registerInput
-            const exists = await this.users.findOne({ email })
-            if (exists) throw new BadRequestException("User Already exists")
-            const user = await this.users.save(
-                this.users.create({ email, name, password, role })
-            ).catch((r) => {
-                console.log(r);
-            })
-            return user
-        } catch (error) {
-            return error
-        }
-    }
-
     async login(input): Promise<any> {
         try {
             const { email, password } = input;

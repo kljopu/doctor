@@ -50,6 +50,7 @@ export class BoardService {
         try {
             const board: Board = await this.boards.findOne(boardId)
             if (!board) throw new NotFoundException()
+            let { user, ...result } = board
             return board
         } catch (error) {
             return error
@@ -82,9 +83,8 @@ export class BoardService {
             board.title = boardInput.title
             board.contents = boardInput.contents
             this.boards.save(board)
-            return {
-                board
-            }
+            let { user, ...result } = board
+            return result
         } catch (error) {
             return error
         }
@@ -114,11 +114,10 @@ export class BoardService {
             const comment = await this.comments.save(
                 this.comments.create({
                     comments,
-                    user,
+                    user: user,
                     board
                 })
             )
-            // board.comments = comment
             return comment
         } catch (error) {
             return error
